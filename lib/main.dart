@@ -107,14 +107,14 @@ class _AnimationBGState extends State<AnimationBG> {
   Future<Null> _loadAssets() async {
     _images = ImageMap(rootBundle);
     await _images.load(<String>[
-      'assets/jumpingjack.png',
+      'assets/weathersprites.png',
     ]);
     String json = await DefaultAssetBundle.of(context)
-        .loadString('assets/jumpingjack.json');
-    _sprites = SpriteSheet(_images['assets/jumpingjack.png'], json);
+        .loadString('assets/weathersprites.json');
+    _sprites = SpriteSheet(_images['assets/weathersprites.png'], json);
   }
 
-  _FireworksNode fireworks;
+  SnowNode fireworks;
 
   @override
   void initState() {
@@ -123,14 +123,15 @@ class _AnimationBGState extends State<AnimationBG> {
     _loadAssets().then((_) {
       setState(() {
         assetsLoaded = true;
-        fireworks = new _FireworksNode();
+        fireworks = new SnowNode();
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return assetsLoaded ?ClipRect(child: SpriteWidget(fireworks)): Container();
+//    return assetsLoaded ?ClipRect(child: SpriteWidget(fireworks)): Container();
+    return assetsLoaded ?SpriteWidget(fireworks): Container();
   }
 }
 
@@ -184,5 +185,54 @@ class _FireworksNode extends NodeWithSize {
         new Offset(randomDouble() * 1024.0, randomDouble() * 1024.0);
     addChild(system);
 
+  }
+}
+
+
+class SnowNode extends NodeWithSize{
+  SnowNode() : super(const Size(1024.0, 512.0)){
+    addChild(new Snow());
+  }
+
+
+
+
+
+
+}
+
+class Snow extends Node{
+  Snow(){
+    _addSnowChip( _sprites['flake-2.png'],1.0);
+  }
+
+  void _addSnowChip(SpriteTexture texture , double distance){
+    ParticleSystem particles = new ParticleSystem(
+        texture,
+        transferMode: BlendMode.srcATop,
+//        posVar: const Offset(1024, -768.0),
+        direction: 0.0,
+        directionVar: 0.0,
+        speed: 150.0 / distance,
+        speedVar: 50.0 / distance,
+        startSize: 1.0 / distance,
+        startSizeVar: 0.3 / distance,
+        endSize: 1.2 / distance,
+        endSizeVar: 0.2 / distance,
+        life: 2.0,
+        lifeVar: 0,
+        emissionRate: 2.0,
+        startRotationVar: 360.0,
+        endRotationVar: 360.0,
+        radialAccelerationVar: 10.0 / distance,
+        tangentialAccelerationVar: 10.0 / distance,
+        gravity: const Offset(0.0, -100.0),
+        maxParticles: 6
+    );
+//    particles.position = const Offset(1024.0, -50.0);
+    particles.opacity = 1.0;
+    particles.position =
+    new Offset( randomDouble() * 1024.0, 512.0);
+    addChild(particles);
   }
 }
