@@ -32,27 +32,39 @@ class _FirstPageState extends State<FirstPage> {
       body: Container(
 //        color: Colors.black,
         child: Center(
-
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimationButton(code: 1,onTap: (){
-                setState(() {
-                  index = 1;
-                });
-              },),
-              SizedBox(height: 10.0,),
-              AnimationButton(code: 2,onTap: (){
-                setState(() {
-                  index = 2;
-                });
-              },),
-              SizedBox(height: 10.0,),
-              AnimationButton(code: 3,onTap: (){
-                setState(() {
-                  index = 3;
-                });
-              },),
+              AnimationButton(
+                code: 1,
+                onTap: () {
+                  setState(() {
+                    index = 1;
+                  });
+                },
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              AnimationButton(
+                code: 2,
+                onTap: () {
+                  setState(() {
+                    index = 2;
+                  });
+                },
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              AnimationButton(
+                code: 3,
+                onTap: () {
+                  setState(() {
+                    index = 3;
+                  });
+                },
+              ),
             ],
           ),
         ),
@@ -66,13 +78,12 @@ SpriteSheet _sprites;
 class AnimationButton extends StatefulWidget {
   final int code;
   final Function onTap;
-  AnimationButton({@required this.code,@required this.onTap});
+  AnimationButton({@required this.code, @required this.onTap});
   @override
   _AnimationButtonState createState() => _AnimationButtonState();
 }
 
 class _AnimationButtonState extends State<AnimationButton> {
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -80,12 +91,22 @@ class _AnimationButtonState extends State<AnimationButton> {
       child: Container(
           width: 200.0,
           height: 100.0,
-          decoration:index == widget.code ?  BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(10.0)): BoxDecoration(color: Colors.blueGrey,borderRadius: BorderRadius.circular(10.0)),
+          decoration: index == widget.code
+              ? BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(10.0))
+              : BoxDecoration(
+                  color: Colors.blueGrey,
+                  borderRadius: BorderRadius.circular(10.0)),
           child: Stack(
-              alignment: Alignment.center,
+            alignment: Alignment.center,
             children: [
-              index == widget.code ?  AnimationBG() : Container(),
-              Text('按鈕${widget.code}號',style: TextStyle(color:index == widget.code ? Colors.white:Colors.black),),
+              index == widget.code ? AnimationBG() : Container(),
+              Text(
+                '按鈕${widget.code}號',
+                style: TextStyle(
+                    color: index == widget.code ? Colors.white : Colors.black),
+              ),
             ],
           )),
     );
@@ -93,8 +114,6 @@ class _AnimationButtonState extends State<AnimationButton> {
 }
 
 class AnimationBG extends StatefulWidget {
-
-
   @override
   _AnimationBGState createState() => _AnimationBGState();
 }
@@ -130,13 +149,10 @@ class _AnimationBGState extends State<AnimationBG> {
 
   @override
   Widget build(BuildContext context) {
-//    return assetsLoaded ?ClipRect(child: SpriteWidget(fireworks)): Container();
-    return assetsLoaded ?SpriteWidget(fireworks): Container();
+    return assetsLoaded ?ClipRect(child: SpriteWidget(fireworks)): Container();
+//    return assetsLoaded ? SpriteWidget(fireworks) : Container();
   }
 }
-
-
-
 
 class _FireworksNode extends NodeWithSize {
   _FireworksNode() : super(const Size(1024.0, 1024.0));
@@ -184,55 +200,47 @@ class _FireworksNode extends NodeWithSize {
     system.position =
         new Offset(randomDouble() * 1024.0, randomDouble() * 1024.0);
     addChild(system);
-
   }
 }
 
-
-class SnowNode extends NodeWithSize{
-  SnowNode() : super(const Size(1024.0, 512.0)){
+class SnowNode extends NodeWithSize {
+  SnowNode() : super(const Size(1024.0, 512.0)) {
     addChild(new Snow());
   }
-
-
-
-
-
-
 }
 
-class Snow extends Node{
-  Snow(){
-    _addSnowChip( _sprites['flake-2.png'],1.0);
+class Snow extends Node {
+  Snow() {
+    _addSnowChip(_sprites['flake-2.png'], 0.2 , 0.73);
+    _addSnowChip(_sprites['flake-2.png'], 0.4 ,1.3);
+    _addSnowChip(_sprites['flake-2.png'], 0.6 ,0.8);
+    _addSnowChip(_sprites['flake-2.png'], 0.8 ,0.95);
   }
 
-  void _addSnowChip(SpriteTexture texture , double distance){
-    ParticleSystem particles = new ParticleSystem(
-        texture,
+  void _addSnowChip(SpriteTexture texture, double distance,double rate) {
+    ParticleSystem particles = new ParticleSystem(texture,
         transferMode: BlendMode.srcATop,
-//        posVar: const Offset(1024, -768.0),
-        direction: 0.0,
+//        posVar: const Offset(50, 0),
+        direction: 270.0,
         directionVar: 0.0,
-        speed: 150.0 / distance,
-        speedVar: 50.0 / distance,
-        startSize: 1.0 / distance,
-        startSizeVar: 0.3 / distance,
-        endSize: 1.2 / distance,
-        endSizeVar: 0.2 / distance,
-        life: 2.0,
+        speed: 50.0,
+//        speedVar: 50.0,
+        startSize: 1.0,
+        startSizeVar: 0.3,
+        endSize: 1.2,
+        endSizeVar: 0.2,
+        life: 2.0 * rate,
         lifeVar: 0,
-        emissionRate: 2.0,
+        emissionRate:1 * rate,
         startRotationVar: 360.0,
         endRotationVar: 360.0,
-        radialAccelerationVar: 10.0 / distance,
-        tangentialAccelerationVar: 10.0 / distance,
-        gravity: const Offset(0.0, -100.0),
-        maxParticles: 6
-    );
+        radialAccelerationVar: 10.0 ,
+        tangentialAccelerationVar: 10.0 ,
+        gravity: const Offset(0.0, -500.0),
+        maxParticles: 5);
 //    particles.position = const Offset(1024.0, -50.0);
     particles.opacity = 1.0;
-    particles.position =
-    new Offset( randomDouble() * 1024.0, 512.0);
+    particles.position = new Offset(1024 * distance, 512.0);
     addChild(particles);
   }
 }
