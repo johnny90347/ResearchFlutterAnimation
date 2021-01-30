@@ -35,9 +35,11 @@ class WeatherDemo extends StatefulWidget {
 class _WeatherDemoState extends State<WeatherDemo> {
 
   // This method loads all assets that are needed for the demo.
+  // 先載入所有的資產,ImageMap() ,image map 持有所有的圖片資產
   Future<Null> _loadAssets(AssetBundle bundle) async {
     // Load images using an ImageMap
     _images = new ImageMap(bundle);
+    // 使用load 方法 (非同步) 去取得圖片
     await _images.load(<String>[
       'assets/clouds-0.png',
       'assets/clouds-1.png',
@@ -50,6 +52,7 @@ class _WeatherDemoState extends State<WeatherDemo> {
     ]);
 
     // Load the sprite sheet, which contains snowflakes and rain drops.
+    // 取得sprite sheet , 這邊應該是解析 sprite sheet 的 png 檔案,所以需要一個png檔案(sprite sheet)
     String json = await DefaultAssetBundle.of(context).loadString('assets/weathersprites.json');
     _sprites = new SpriteSheet(_images['assets/weathersprites.png'], json);
   }
@@ -60,10 +63,13 @@ class _WeatherDemoState extends State<WeatherDemo> {
     super.initState();
 
     // Get our root asset bundle
+    // import 'package:flutter/services.dart'; 取得root bundle 要import
     AssetBundle bundle = rootBundle;
 
     // Load all graphics, then set the state to assetsLoaded and create the
     // WeatherWorld sprite tree
+    // 載入所有的圖片之後,建立sprite tree (所有的sprite 要建立在 sprite tree下,這個tree的class 是 NodeWithSize 的class 建立的,是渲染遊戲畫面的根結點 RootNode,)
+    // RootNode 可以實現一個遊戲的基本loop ,也就是他會有 update(), 和 paint() => node的繪製
     _loadAssets(bundle).then((_) {
       setState(() {
         assetsLoaded = true;
@@ -168,13 +174,17 @@ const List<Color> _kBackgroundColorsBottom = const <Color>[
 // will be scaled to fit into our SpriteWidget container.
 class WeatherWorld extends NodeWithSize {
   WeatherWorld() : super(const Size(2048.0, 2048.0)) {
+    // 這裡重要點的是,在RootNode 初始化時,會初始化一個自訂義(這邊是2048 * 2048)的座標系統,這樣就可以按照這個座標系統新增新的子node
+    // 不管是 parent or child 都可以有自己的坐標系,及初始位置相對於parent 的座標位置
 
     // Start by adding a background.
+    // 裡面所有要加入的東西 都是Node ,可以是一般的Node,也可以是有座標體系的 NodeWithSize
     _background = new GradientNode(
       this.size,
       _kBackgroundColorsTop[0],
       _kBackgroundColorsBottom[0],
     );
+    // 在parent Node 中加入 child Node
     addChild(_background);
 
     // Then three layers of clouds, that will be scrolled in parallax.
