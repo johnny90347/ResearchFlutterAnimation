@@ -33,6 +33,7 @@ class _FirstPageState extends State<FirstPage> {
     // 使用load 方法 (非同步) 去取得圖片
     await _images.load(<String>[
       'assets/diamond.png',
+      'assets/ray.png',
     ]);
   }
 
@@ -43,8 +44,11 @@ class _FirstPageState extends State<FirstPage> {
     AssetBundle bundle = rootBundle;
     _loadAssets(bundle).then(
       (value) {
-        assetsLoaded = true;
-        _game = new Game();
+        setState(() {
+          assetsLoaded = true;
+          _game = new Game();
+        });
+
       },
     );
   }
@@ -71,10 +75,11 @@ class Game extends NodeWithSize {
     // final _box = new BoxNode();
     // this.addChild(_box);
 
-    Sprite sprite = new Sprite.fromImage(_images['assets/diamond.png']);
-    sprite.position = const Offset(50,0);
-    sprite.size = Size(10, 10);
-    addChild(sprite);
+    // 加入sprite
+    // Sprite sprite = new Sprite.fromImage(_images['assets/diamond.png']);
+    // sprite.position = const Offset(50,0);
+    // sprite.size = Size(10, 10);
+    // addChild(sprite);
 
     // 顏色漸變的動畫,可排續
     // sprite.motions.run(
@@ -104,26 +109,32 @@ class Game extends NodeWithSize {
     //       3)),
     // );
 
-    final boxHeight = this.size.height;
+
 
     // 平行執行 這些動畫
-    sprite.motions.run(
-      new MotionRepeatForever(
-          new MotionGroup([
-            new MotionTween<Offset>(
-                    (a) => position = a,
-               Offset(0,boxHeight),
-                const Offset(0, 0.0),
-               1),
-            new MotionTween<double>(
-                    (a) => sprite.opacity = a,
-                1,
-                0,
-                1)
-          ])
-      )
+    // final boxHeight = this.size.height;
+    // sprite.motions.run(
+    //   new MotionRepeatForever(
+    //       new MotionGroup([
+    //         new MotionTween<Offset>(
+    //                 (a) => position = a,
+    //            Offset(0,boxHeight),
+    //             const Offset(0, 0.0),
+    //            1),
+    //         new MotionTween<double>(
+    //                 (a) => sprite.opacity = a,
+    //             1,
+    //             0,
+    //             1)
+    //       ])
+    //   )
+    //
+    // );
 
-    );
+
+
+    Ray ray = new Ray();
+    addChild(ray);
 
   }
 
@@ -195,5 +206,40 @@ class Diamond extends Node {
     path.lineTo(0, height / 2);
     path.close();
     canvas.drawPath(path, boxPaint);
+  }
+}
+
+// An animated sun ray
+class Ray extends Sprite {
+  double _rotationSpeed;
+  double maxOpacity;
+
+  Ray() : super.fromImage(_images['assets/ray.png']) {
+    // 旋轉時,會需要設定到pivot, 把什麼當軸來轉,預設是中央(0.5,0.5)  , x => 左到右 0-> 1 ,y=> 上到下 0-> 1
+    pivot = const Offset(0.5, 0.0);
+    size = Size(20,20);
+    position = Offset(50, 50);
+    transferMode = BlendMode.plus;
+    // rotation = randomDouble() * 360.0;
+    maxOpacity = randomDouble() * 0.2;
+    opacity = maxOpacity;
+    scaleX = 2.5 + randomDouble();
+    scaleY = 0.3;
+    _rotationSpeed = randomSignedDouble() * 50.0;
+
+    // Scale animation
+    double scaleTime = randomSignedDouble() * 2.0 + 4.0;
+
+    motions.run(new MotionRepeatForever(
+        new MotionSequence(<Motion>[
+          new MotionTween<double>((a) => scaleX = a, scaleX, scaleX * 0.5, scaleTime),
+          new MotionTween<double>((a) => scaleX = a, scaleX * 0.5, scaleX, scaleTime)
+        ])
+    ));
+  }
+
+  @override
+  void update(double dt) {
+    rotation += dt * _rotationSpeed;
   }
 }
