@@ -179,6 +179,7 @@ class WeatherWorld extends NodeWithSize {
 
     // Start by adding a background.
     // 裡面所有要加入的東西 都是Node ,可以是一般的Node,也可以是有座標體系的 NodeWithSize
+    // this.size 得到的是 Size(2048,2048)
     _background = new GradientNode(
       this.size,
       _kBackgroundColorsTop[0],

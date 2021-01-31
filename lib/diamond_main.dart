@@ -22,32 +22,12 @@ class FirstPage extends StatefulWidget {
   _FirstPageState createState() => _FirstPageState();
 }
 
-ImageMap _images;
-
 class _FirstPageState extends State<FirstPage> {
-
-  bool assetsLoaded = false;
-
-  Future<Null> _loadAssets(AssetBundle bundle) async {
-    // Load images using an ImageMap
-    _images = new ImageMap(bundle);
-    // 使用load 方法 (非同步) 去取得圖片
-    await _images.load(<String>[
-      'assets/diamond.png',
-    ]);
-  }
-
   @override
   void initState() {
     super.initState();
 
-    AssetBundle bundle = rootBundle;
-    _loadAssets(bundle).then(
-      (value) {
-        assetsLoaded = true;
-        _game = new Game();
-      } ,
-    );
+    _game = new Game();
   }
 
   @override
@@ -60,7 +40,7 @@ class _FirstPageState extends State<FirstPage> {
         width: 400,
         height: 400,
         color: Colors.grey,
-        child: assetsLoaded ? SpriteWidget(_game) : Container(),
+        child: SpriteWidget(_game),
       ),
     );
   }
@@ -71,36 +51,15 @@ class Game extends NodeWithSize {
   Game() : super(new Size(100.0, 100.0)) {
     // final _box = new BoxNode();
     // this.addChild(_box);
-
-    Sprite sprite = new Sprite.fromImage(_images['assets/diamond.png']);
-    sprite.position = const Offset(50.0, 50.0);
-    sprite.size = Size(10,10);
-    addChild(sprite);
-
-    sprite.motions.run(new MotionRepeatForever(
-        new MotionSequence(<Motion>[
-          // 這樣可以漸變顏色
-          new MotionTween<Color>(
-                  (a) => sprite.colorOverlay = a,
-              const Color(0xff000000),
-             Colors.blue,
-              5.0
-          ),
-          new MotionTween<double>(
-                  (a) => sprite.opacity = a,
-              0,
-              1,
-              5.0
-          )
-        ])
-    ));
   }
 
   @override
   void paint(Canvas canvas) {
     super.paint(canvas);
 
-    // addChild(new Diamond(width: 20.0, height: 20.0,offset: Offset(0,0)));
+
+
+    addChild(new Diamond(width: 20.0, height: 20.0,offset: Offset(0,0)));
   }
 
   Path getDiamondPath(double x, double y) {
@@ -138,8 +97,7 @@ class Diamond extends Node {
   final double height;
   final Offset offset;
 
-  Diamond(
-      {@required this.width, @required this.height, @required this.offset}) {
+  Diamond({@required this.width ,@ required this.height,@ required this.offset}){
     this.position = offset;
   }
 
@@ -164,5 +122,6 @@ class Diamond extends Node {
     path.lineTo(0, height / 2);
     path.close();
     canvas.drawPath(path, boxPaint);
+
   }
 }

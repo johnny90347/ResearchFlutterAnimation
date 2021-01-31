@@ -33,12 +33,14 @@ class _FitnessDemoContents extends StatefulWidget {
 }
 
 class _FitnessDemoContentsState extends State<_FitnessDemoContents> {
+
+  // 仔入資源
   Future<Null> _loadAssets(AssetBundle bundle) async {
     _images = new ImageMap(rootBundle);
     await _images.load(<String>[
       'assets/jumpingjack.png',
     ]);
-
+  // spirte sheet 解析
     String json =
     await DefaultAssetBundle.of(context).loadString('assets/jumpingjack.json');
     _sprites = new SpriteSheet(_images['assets/jumpingjack.png'], json);
@@ -255,7 +257,9 @@ class _WorkoutAnimationNode extends NodeWithSize {
   }
 }
 
+// 進度圈
 class _ProgressCircle extends NodeWithSize {
+  // size 由外面輸入
   _ProgressCircle(Size size, [this.value = 0.0]) : super(size);
 
   static const double _kTwoPI = math.pi * 2.0;
@@ -268,11 +272,13 @@ class _ProgressCircle extends NodeWithSize {
   void paint(Canvas canvas) {
     applyTransformForPivot(canvas);
 
+    // 畫筆
     Paint circlePaint = new Paint()
       ..color = Colors.white30
       ..strokeWidth = 24.0
       ..style = PaintingStyle.stroke;
 
+    // 畫個圈
     canvas.drawCircle(new Offset(size.width / 2.0, size.height / 2.0),
         size.width / 2.0, circlePaint);
 
@@ -310,9 +316,11 @@ class _JumpingJack extends Node {
   _JumpingJackSide right;
 }
 
+// 開合跳
 class _JumpingJackSide extends Node {
+  // 右邊為true , 加上一個callback
   _JumpingJackSide(bool right, this.onPerformedJumpingJack) {
-    // Torso and head
+    // Torso and head 軀幹 跟頭
     torso = _createPart('torso.png', const Offset(512.0, 512.0));
     addChild(torso);
 
@@ -354,7 +362,7 @@ class _JumpingJackSide extends Node {
   _JumpingJackPart foot;
 
   final VoidCallback onPerformedJumpingJack;
-
+// 建立開合跳的部分組件
   _JumpingJackPart _createPart(String textureName, Offset pivotPosition) {
     return new _JumpingJackPart(_sprites[textureName], pivotPosition,
         name: textureName);
@@ -453,13 +461,14 @@ class _JumpingJackSide extends Node {
   }
 }
 
+// 這是一個 sprite 物件
 class _JumpingJackPart extends Sprite {
   String name;
 
   _JumpingJackPart(SpriteTexture texture, this.pivotPosition, {this.name: ''})
       : super(texture);
   final Offset pivotPosition;
-
+  // pivot 樞紐,固定不動的那個點,模仿關節
   void setPivotAndPosition(Offset newPosition) {
     pivot = new Offset(pivotPosition.dx / 1024.0, pivotPosition.dy / 1024.0);
     position = newPosition;
