@@ -25,7 +25,6 @@ class FirstPage extends StatefulWidget {
 ImageMap _images;
 
 class _FirstPageState extends State<FirstPage> {
-
   bool assetsLoaded = false;
 
   Future<Null> _loadAssets(AssetBundle bundle) async {
@@ -46,7 +45,7 @@ class _FirstPageState extends State<FirstPage> {
       (value) {
         assetsLoaded = true;
         _game = new Game();
-      } ,
+      },
     );
   }
 
@@ -73,27 +72,59 @@ class Game extends NodeWithSize {
     // this.addChild(_box);
 
     Sprite sprite = new Sprite.fromImage(_images['assets/diamond.png']);
-    sprite.position = const Offset(50.0, 50.0);
-    sprite.size = Size(10,10);
+    sprite.position = const Offset(50,0);
+    sprite.size = Size(10, 10);
     addChild(sprite);
 
-    sprite.motions.run(new MotionRepeatForever(
-        new MotionSequence(<Motion>[
-          // 這樣可以漸變顏色
-          new MotionTween<Color>(
-                  (a) => sprite.colorOverlay = a,
-              const Color(0xff000000),
-             Colors.blue,
-              5.0
-          ),
-          new MotionTween<double>(
-                  (a) => sprite.opacity = a,
-              0,
-              1,
-              5.0
-          )
-        ])
-    ));
+    // 顏色漸變的動畫,可排續
+    // sprite.motions.run(
+    //   new MotionRepeatForever(new MotionSequence(<Motion>[
+    //     // 這樣可以漸變顏色
+    //     new MotionTween<Color>(
+    //         (a) => sprite.colorOverlay = a, Colors.redAccent, Colors.blue, 5.0),
+    //     new MotionTween<double>((a) => sprite.opacity = a, 0, 1, 5.0)
+    //   ])),
+    // );
+
+    // 移動位置
+    // sprite.motions.run(
+    //   new MotionRepeatForever( new MotionTween<Offset>(
+    //           (a) => position = a,
+    //       Offset.zero,
+    //       const Offset(-50.0, 0.0),
+    //       3)),
+    // );
+
+    // 變透明
+    // sprite.motions.run(
+    //   new MotionRepeatForever( new MotionTween<double>(
+    //           (a) => sprite.opacity = a,
+    //       1,
+    //       0,
+    //       3)),
+    // );
+
+    final boxHeight = this.size.height;
+
+    // 平行執行 這些動畫
+    sprite.motions.run(
+      new MotionRepeatForever(
+          new MotionGroup([
+            new MotionTween<Offset>(
+                    (a) => position = a,
+               Offset(0,boxHeight),
+                const Offset(0, 0.0),
+               1),
+            new MotionTween<double>(
+                    (a) => sprite.opacity = a,
+                1,
+                0,
+                1)
+          ])
+      )
+
+    );
+
   }
 
   @override
