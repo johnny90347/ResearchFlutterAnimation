@@ -18,7 +18,7 @@ class WeatherDemoApp extends StatelessWidget {
   }
 }
 
-NodeWithSize _anArea;
+ANArea rootNode ;
 
 ImageMap _images;
 
@@ -40,13 +40,24 @@ class _FirstPageState extends State<FirstPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedBGButton(buttonId:0,onPressed: (){
-              currentBtnId = 0;
+
+              setState(() {
+
+currentBtnId = 0;
+              });
+
             }),
             AnimatedBGButton(buttonId:1,onPressed: (){
-              currentBtnId = 1;
+              setState(() {
+                currentBtnId = 1;
+              });
+
             }),
             AnimatedBGButton(buttonId:2,onPressed: (){
-              currentBtnId = 2;
+              setState(() {
+                currentBtnId = 2;
+              });
+
             })
           ],
         ),
@@ -67,7 +78,6 @@ class AnimatedBGButton extends StatefulWidget {
 
 class _AnimatedBGButtonState extends State<AnimatedBGButton> {
   bool assetsLoaded = false;
-
   Future<Null> _loadAssets(AssetBundle bundle) async {
     // Load images using an ImageMap
     _images = new ImageMap(bundle);
@@ -88,7 +98,7 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
       (value) {
         setState(() {
           assetsLoaded = true;
-          _anArea = new ANArea(btnId: widget.buttonId);
+          rootNode = new ANArea(btnId: widget.buttonId);
         });
       },
     );
@@ -107,7 +117,7 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
             borderRadius: BorderRadius.circular(10.0)),
         child: Stack(
           children: [
-            assetsLoaded ? SpriteWidget(_anArea) : Container(),
+            assetsLoaded && currentBtnId == widget.buttonId ? SpriteWidget(rootNode) : Container(),
           ],
         ),
       ),
@@ -119,14 +129,13 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
 class ANArea extends NodeWithSize {
   int btnId;
 
-  List<DiamondSprite> diamondSpriteList = [];
-
   ANArea({@required this.btnId}) : super(new Size(12.0, 6.0)) {
     _generateFlashDiamond();
-//    _generateFloatDiamond();
-//    _generateLightSpot();
+    _generateFloatDiamond();
+    _generateLightSpot();
 
   }
+
 
   void _generateLightSpot(){
     for (int i = 0; i < 3; i++) {
@@ -154,8 +163,7 @@ class ANArea extends NodeWithSize {
         final double yOffset = (1 + (i * 2)).toDouble();
         sprite.position = Offset(xOffset, yOffset);
         this.addChild(sprite);
-       diamondSpriteList.add(sprite);
-        order++;
+        order ++;
       }
     }
 
@@ -164,12 +172,6 @@ class ANArea extends NodeWithSize {
   }
 
 
-  set active(bool active) {
-    motions.stopAll();
-    if(active){
-      _playAnimation(sprite: diamondSpriteList[2], delayTime: 1);
-    }
-  }
 
 
 
@@ -229,8 +231,10 @@ class DiamondSprite extends Sprite {
         delayTime = 3;
         break;
     }
+  if(needAnimate){
+        _playAnimation(delayTime: delayTime);
+  }
 
-//    _playAnimation(delayTime: delayTime);
   }
 
 
@@ -321,9 +325,9 @@ class FloatDiamond extends Sprite {
   void animation() {
     motions.run(
       new MotionRepeatForever(new MotionGroup([
-        new MotionTween<double>((a) => opacity = a, 1, 0.3, 13),
+        new MotionTween<double>((a) => opacity = a, 1, 0.3, 5),
         new MotionTween<Offset>((a) => position = a, Offset(xOffset, yOffset),
-            Offset(xOffset, 0.0), 13),
+            Offset(xOffset, 0.0), 5),
       ])),
     );
   }
@@ -372,7 +376,7 @@ class LightSpot extends Sprite {
     // 閃爍動畫
     motions.run(
       new MotionRepeatForever(new MotionSequence(<Motion>[
-        new MotionTween<double>((a) => opacity = a, 0, 1, 2),
+        new MotionTween<double>((a) => opacity = a, 0, 1, 1),
         new MotionTween<double>((a) => opacity = a, 1, 0, 2),
       ])),
     );
