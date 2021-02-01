@@ -97,7 +97,7 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
 
     AssetBundle bundle = rootBundle;
     _loadAssets(bundle).then(
-      (value) {
+          (value) {
         setState(() {
           assetsLoaded = true;
           rootNode = new ANArea(btnId: widget.buttonId);
@@ -223,9 +223,9 @@ class DiamondSprite extends Sprite {
       new MotionRepeatForever(new MotionSequence(<Motion>[
         // 這樣可以漸變顏色
         new MotionTween<Color>(
-            (a) => this.colorOverlay = a, Colors.white12, Colors.white70, 2.0),
+                (a) => this.colorOverlay = a, Colors.white12, Colors.white70, 2.0),
         new MotionTween<Color>(
-            (a) => this.colorOverlay = a, Colors.white70, Colors.white12, 2.0),
+                (a) => this.colorOverlay = a, Colors.white70, Colors.white12, 2.0),
       ])),
     );
   }
