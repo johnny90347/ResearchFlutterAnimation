@@ -145,68 +145,43 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
 class ANArea extends NodeWithSize {
 
   List<SquareSprite> squareList = [
-    SquareSprite(originY: 10, totalTime: 3, delayTime: 0, processTime: 1.5, originScale: 1,endScale: 1),
+    SquareSprite(originY:8, totalTime: 3, delayTime: 0, processTime: 1.2, originScale: 0.5,endScale: 0.5),
+
     SquareSprite(originY:2, totalTime: 3, delayTime: .2, processTime: 1.2, originScale: 0.7,endScale: 0.5),
-    SquareSprite(originY:8, totalTime: 3, delayTime: .3, processTime: 1.2, originScale: 0.5,endScale: 0.5),
-    SquareSprite(originY:6, totalTime: 3, delayTime: .4, processTime: 1.5, originScale: 1,endScale: 1),
+    SquareSprite(originY: 10, totalTime: 3, delayTime: .3, processTime: 1.2, originScale: .8,endScale: .5),
+    SquareSprite(originY:6, totalTime: 3, delayTime: .4, processTime: 1.2, originScale: 1,endScale: .2),
     SquareSprite(originY:1, totalTime: 3, delayTime: .5, processTime: 1, originScale: .7,endScale: .3),
     SquareSprite(originY:8, totalTime: 3, delayTime: .5, processTime: 1, originScale: .3,endScale: .3),
     SquareSprite(originY:7, totalTime: 3, delayTime: .7, processTime: 1.2, originScale: .7,endScale: .3),
     SquareSprite(originY:6, totalTime: 3, delayTime: .8, processTime: .8, originScale: .4,endScale: .2),
     SquareSprite(originY:2, totalTime: 3, delayTime: .9, processTime: 1, originScale: .6,endScale: .4),
-    SquareSprite(originY:5, totalTime: 3, delayTime: .9, processTime:1.5, originScale: .5,endScale: .2),
+    SquareSprite(originY:5, totalTime: 3, delayTime: .9, processTime:1.2, originScale: .5,endScale: .2),
     SquareSprite(originY:4, totalTime: 3, delayTime: .9, processTime:.8, originScale: .4,endScale: .2),
     SquareSprite(originY:10, totalTime: 3, delayTime: 1, processTime:.8, originScale: .6,endScale: .6),
-    SquareSprite(originY:7, totalTime: 3, delayTime: 1, processTime:1.5, originScale: .7,endScale: .5),
-    SquareSprite(originY:4, totalTime: 3, delayTime: 1.1, processTime:1.6, originScale: .5,endScale: .3),
-    SquareSprite(originY:6, totalTime: 3, delayTime: 1.2, processTime:1.8, originScale: .6,endScale: .3),
+    SquareSprite(originY:7, totalTime: 3, delayTime: 1, processTime:1.2, originScale: .7,endScale: .5),
+    SquareSprite(originY:4, totalTime: 3, delayTime: 1.1, processTime:1, originScale: .5,endScale: .3),
+    SquareSprite(originY:6, totalTime: 3, delayTime: 1.2, processTime:1, originScale: .6,endScale: .3),
+  ];
+
+  //獨立的動畫
+  List<SquareSprite> squarePaddingList = [
+    SquareSprite(originY:6, totalTime:1.6, delayTime: .1, processTime:1.5, originScale: .7,endScale: .1),
+    SquareSprite(originY:7, totalTime:1.1, delayTime: .1, processTime:.9, originScale: .8,endScale: .1),
+    SquareSprite(originY:8, totalTime:1.3, delayTime: .1, processTime:1.2, originScale: .7,endScale: .1),
+    SquareSprite(originY:5, totalTime:1.8, delayTime: .1, processTime:1.7, originScale: .5,endScale: .1),
   ];
 
 
 
   ANArea() : super(new Size(24.0, 12.0)) {
-    // _generateFlashDiamond();
-    // _generateFloatDiamond();
-    // _generateLightSpot();
-    //
-    // _runDiamondSpriteAnimate();
-    // _runLightSpotAnimate();
-    // _runFloatDiamondAnimate();
-    // final sprite = new SquareSprite(order: 1);
-    // this.addChild(sprite);
-    //
-    // motions.run(
-    //   new MotionRepeatForever(new MotionSequence(<Motion>[
-    //     new MotionDelay(0),
-    //     new MotionGroup([
-    //       new MotionTween<double>((a) => sprite.opacity = a, 1, 0, 1.2),
-    //       new MotionTween<Offset>((a) => sprite.position = a,
-    //           Offset(size.width, 5), Offset(0, 5), 1.2),
-    //     ]),
-    //     new MotionDelay(0),
-    //   ])),
-    // );
-    //
-    // final sprite2 = new SquareSprite(order: 1);
-    // sprite2.scale = 1;
-    // this.addChild(sprite2);
-    // motions.run(
-    //   new MotionRepeatForever(new MotionSequence(<Motion>[
-    //     new MotionDelay(.4),
-    //     new MotionGroup([
-    //       new MotionTween<double>((a) => sprite2.opacity = a, 1, 0, 0.8),
-    //       new MotionTween<double>((a) => sprite2.scale = a, 1, .5, 0.8),
-    //       new MotionTween<Offset>((a) => sprite2.position = a,
-    //           Offset(size.width, 8), Offset(0, 8), 0.8),
-    //     ]),
-    //     new MotionDelay(0),
-    //   ])),
-    // );
-
-
     this.squareList.forEach((sprite) {
       this.addChild(sprite);
      runAnimation(sprite: sprite);
+    });
+
+    this.squarePaddingList.forEach((sprite) {
+      this.addChild(sprite);
+      runAnimationPadding(sprite: sprite);
     });
   }
 
@@ -217,7 +192,29 @@ class ANArea extends NodeWithSize {
         new MotionGroup([
           new MotionTween<Color>(
                   (a) => sprite.colorOverlay = a,
-              sprite.colorOverlay,
+              Colors.white,
+              Colors.white10,
+              sprite.processTime/4),
+          new MotionTween<double>((a) => sprite.opacity = a, 1, 0, sprite.processTime),
+          new MotionTween<double>((a) => sprite.scale = a, sprite.originScale,
+              sprite.endScale, sprite.processTime),
+          new MotionTween<Offset>((a) => sprite.position = a,
+              Offset(size.width, sprite.originY), Offset(0, sprite.originY), sprite.processTime),
+        ]),
+        new MotionDelay(sprite.totalTime - sprite.processTime - sprite.delayTime > 0 ? sprite.totalTime - sprite.processTime - sprite.delayTime : 0),
+      ])),
+    );
+  }
+
+
+  void runAnimationPadding({@required SquareSprite sprite}){
+    motions.run(
+      new MotionRepeatForever(new MotionSequence(<Motion>[
+        new MotionTween<double>((a) => sprite.opacity = a, 0, 0, sprite.delayTime),
+        new MotionGroup([
+          new MotionTween<Color>(
+                  (a) => sprite.colorOverlay = a,
+              Colors.white,
               Colors.white10,
               sprite.processTime/5),
           new MotionTween<double>((a) => sprite.opacity = a, 1, 0, sprite.processTime),
@@ -226,19 +223,18 @@ class ANArea extends NodeWithSize {
           new MotionTween<Offset>((a) => sprite.position = a,
               Offset(size.width, sprite.originY), Offset(0, sprite.originY), sprite.processTime),
         ]),
-        new MotionDelay(sprite.totalTime - sprite.processTime - sprite.delayTime),
+        // new MotionDelay(sprite.totalTime - sprite.processTime - sprite.delayTime),
       ])),
     );
-  }
-
-  void generateSpriteAndRunAnimation() {
-
   }
 
   set active(bool active) {
     motions.stopAll();
     this.squareList.forEach((sprite) {
       runAnimation(sprite: sprite);
+    });
+    this.squarePaddingList.forEach((sprite) {
+      runAnimationPadding(sprite: sprite);
     });
   }
 }
@@ -260,7 +256,7 @@ class SquareSprite extends Sprite {
     @required this.endScale
   }) : super.fromImage(_images['assets/diamond.png']) {
     // this.position = Offset(6, 3);
-    this.colorOverlay = Colors.white70;
+    this.colorOverlay = Colors.white;
     this.opacity = 0;
     this.size = Size(3, 3);
     this.rotation = 45.0;
