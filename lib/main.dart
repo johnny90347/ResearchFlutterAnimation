@@ -117,6 +117,33 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
     super.initState();
   }
 
+
+  final selectedGradient = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [
+        0.1,
+        0.2,
+        0.5,
+        0.8,
+        0.9
+      ],
+      colors: [
+        Color(0xff824f18),
+        Color(0xff8d5a22),
+        Color(0xffa46925),
+        Color(0xff8d5a22),
+        Color(0xff824f18),
+      ]);
+
+  final unSelectedGradient = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+     Colors.grey,
+        Colors.grey,
+      ]);
+
   // 目前按鈕的比例是用2(寬):1(高)做的,如果不照這個比例也可以跑,只是比較醜
   @override
   Widget build(BuildContext context) {
@@ -127,7 +154,8 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
         width: 150,
         height: 75,
         decoration: BoxDecoration(
-            color: currentBtnId == widget.buttonId ? Colors.brown : Colors.grey,
+            // color: currentBtnId == widget.buttonId ? Colors.brown : Colors.grey,
+            gradient: currentBtnId == widget.buttonId ?  selectedGradient:unSelectedGradient,
             borderRadius: BorderRadius.circular(10.0)),
         child: Stack(
           children: [
@@ -143,40 +171,150 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
 
 // 動畫播放的區域
 class ANArea extends NodeWithSize {
-
   List<SquareSprite> squareList = [
-    SquareSprite(originY:8, totalTime: 3, delayTime: 0, processTime: 1.2, originScale: 0.5,endScale: 0.5),
-
-    SquareSprite(originY:2, totalTime: 3, delayTime: .2, processTime: 1.2, originScale: 0.7,endScale: 0.5),
-    SquareSprite(originY: 10, totalTime: 3, delayTime: .3, processTime: 1.2, originScale: .8,endScale: .5),
-    SquareSprite(originY:6, totalTime: 3, delayTime: .4, processTime: 1.2, originScale: 1,endScale: .2),
-    SquareSprite(originY:1, totalTime: 3, delayTime: .5, processTime: 1, originScale: .7,endScale: .3),
-    SquareSprite(originY:8, totalTime: 3, delayTime: .5, processTime: 1, originScale: .3,endScale: .3),
-    SquareSprite(originY:7, totalTime: 3, delayTime: .7, processTime: 1.2, originScale: .7,endScale: .3),
-    SquareSprite(originY:6, totalTime: 3, delayTime: .8, processTime: .8, originScale: .4,endScale: .2),
-    SquareSprite(originY:2, totalTime: 3, delayTime: .9, processTime: 1, originScale: .6,endScale: .4),
-    SquareSprite(originY:5, totalTime: 3, delayTime: .9, processTime:1.2, originScale: .5,endScale: .2),
-    SquareSprite(originY:4, totalTime: 3, delayTime: .9, processTime:.8, originScale: .4,endScale: .2),
-    SquareSprite(originY:10, totalTime: 3, delayTime: 1, processTime:.8, originScale: .6,endScale: .6),
-    SquareSprite(originY:7, totalTime: 3, delayTime: 1, processTime:1.2, originScale: .7,endScale: .5),
-    SquareSprite(originY:4, totalTime: 3, delayTime: 1.1, processTime:1, originScale: .5,endScale: .3),
-    SquareSprite(originY:6, totalTime: 3, delayTime: 1.2, processTime:1, originScale: .6,endScale: .3),
+    SquareSprite(
+        originY: 8,
+        totalTime: 3,
+        delayTime: 0,
+        processTime: 1.2,
+        originScale: 0.5,
+        endScale: 0.5),
+    SquareSprite(
+        originY: 2,
+        totalTime: 3,
+        delayTime: .2,
+        processTime: 1.2,
+        originScale: 0.7,
+        endScale: 0.5),
+    SquareSprite(
+        originY: 10,
+        totalTime: 3,
+        delayTime: .3,
+        processTime: 1.2,
+        originScale: .8,
+        endScale: .5),
+    SquareSprite(
+        originY: 6,
+        totalTime: 3,
+        delayTime: .4,
+        processTime: 1.2,
+        originScale: 1,
+        endScale: .2),
+    SquareSprite(
+        originY: 1,
+        totalTime: 3,
+        delayTime: .5,
+        processTime: 1,
+        originScale: .7,
+        endScale: .3),
+    SquareSprite(
+        originY: 8,
+        totalTime: 3,
+        delayTime: .5,
+        processTime: 1,
+        originScale: .5,
+        endScale: .3),
+    SquareSprite(
+        originY: 7,
+        totalTime: 3,
+        delayTime: .7,
+        processTime: 1.2,
+        originScale: 1,
+        endScale: .3),
+    SquareSprite(
+        originY: 6,
+        totalTime: 3,
+        delayTime: .8,
+        processTime: .8,
+        originScale: .4,
+        endScale: .2),
+    SquareSprite(
+        originY: 2,
+        totalTime: 3,
+        delayTime: .9,
+        processTime: 1,
+        originScale: 1,
+        endScale: .4),
+    SquareSprite(
+        originY: 5,
+        totalTime: 3,
+        delayTime: .9,
+        processTime: 1.2,
+        originScale: .5,
+        endScale: .2),
+    SquareSprite(
+        originY: 4,
+        totalTime: 3,
+        delayTime: .9,
+        processTime: .8,
+        originScale: .8,
+        endScale: .2),
+    SquareSprite(
+        originY: 10,
+        totalTime: 3,
+        delayTime: 1,
+        processTime: .8,
+        originScale: .6,
+        endScale: .6),
+    SquareSprite(
+        originY: 7,
+        totalTime: 3,
+        delayTime: 1,
+        processTime: 1.2,
+        originScale: 1,
+        endScale: .5),
+    SquareSprite(
+        originY: 4,
+        totalTime: 3,
+        delayTime: 1.1,
+        processTime: 1,
+        originScale: .5,
+        endScale: .3),
+    SquareSprite(
+        originY: 6,
+        totalTime: 3,
+        delayTime: 1.2,
+        processTime: 1,
+        originScale: .6,
+        endScale: .3),
   ];
 
   //獨立的動畫
   List<SquareSprite> squarePaddingList = [
-    SquareSprite(originY:6, totalTime:1.6, delayTime: .1, processTime:1.5, originScale: .7,endScale: .1),
-    SquareSprite(originY:7, totalTime:1.1, delayTime: .1, processTime:.9, originScale: .8,endScale: .1),
-    SquareSprite(originY:8, totalTime:1.3, delayTime: .1, processTime:1.2, originScale: .7,endScale: .1),
-    SquareSprite(originY:5, totalTime:1.8, delayTime: .1, processTime:1.7, originScale: .5,endScale: .1),
+    SquareSprite(
+        originY: 6,
+        totalTime: 1.6,
+        delayTime: .1,
+        processTime: 1.5,
+        originScale: .7,
+        endScale: .1),
+    SquareSprite(
+        originY: 7,
+        totalTime: 1.1,
+        delayTime: .1,
+        processTime: .9,
+        originScale: .8,
+        endScale: .1),
+    SquareSprite(
+        originY: 8,
+        totalTime: 1.3,
+        delayTime: .1,
+        processTime: 1.2,
+        originScale: .7,
+        endScale: .1),
+    SquareSprite(
+        originY: 5,
+        totalTime: 1.8,
+        delayTime: .1,
+        processTime: 1.7,
+        originScale: .5,
+        endScale: .1),
   ];
-
-
 
   ANArea() : super(new Size(24.0, 12.0)) {
     this.squareList.forEach((sprite) {
       this.addChild(sprite);
-     runAnimation(sprite: sprite);
+      runAnimation(sprite: sprite);
     });
 
     this.squarePaddingList.forEach((sprite) {
@@ -185,43 +323,49 @@ class ANArea extends NodeWithSize {
     });
   }
 
-  void runAnimation({@required SquareSprite sprite}){
+  void runAnimation({@required SquareSprite sprite}) {
     motions.run(
       new MotionRepeatForever(new MotionSequence(<Motion>[
-        new MotionTween<double>((a) => sprite.opacity = a, 0, 0, sprite.delayTime),
+        new MotionTween<double>(
+            (a) => sprite.opacity = a, 0, 0, sprite.delayTime),
         new MotionGroup([
-          new MotionTween<Color>(
-                  (a) => sprite.colorOverlay = a,
-              Colors.white,
-              Colors.white10,
-              sprite.processTime/4),
-          new MotionTween<double>((a) => sprite.opacity = a, 1, 0, sprite.processTime),
+          new MotionTween<Color>((a) => sprite.colorOverlay = a, Colors.white,
+              Colors.white10, sprite.processTime / 4),
+          new MotionTween<double>(
+              (a) => sprite.opacity = a, 1, 0, sprite.processTime),
           new MotionTween<double>((a) => sprite.scale = a, sprite.originScale,
               sprite.endScale, sprite.processTime),
-          new MotionTween<Offset>((a) => sprite.position = a,
-              Offset(size.width, sprite.originY), Offset(0, sprite.originY), sprite.processTime),
+          new MotionTween<Offset>(
+              (a) => sprite.position = a,
+              Offset(size.width, sprite.originY),
+              Offset(0, sprite.originY),
+              sprite.processTime),
         ]),
-        new MotionDelay(sprite.totalTime - sprite.processTime - sprite.delayTime > 0 ? sprite.totalTime - sprite.processTime - sprite.delayTime : 0),
+        new MotionDelay(
+            sprite.totalTime - sprite.processTime - sprite.delayTime > 0
+                ? sprite.totalTime - sprite.processTime - sprite.delayTime
+                : 0),
       ])),
     );
   }
 
-
-  void runAnimationPadding({@required SquareSprite sprite}){
+  void runAnimationPadding({@required SquareSprite sprite}) {
     motions.run(
       new MotionRepeatForever(new MotionSequence(<Motion>[
-        new MotionTween<double>((a) => sprite.opacity = a, 0, 0, sprite.delayTime),
+        new MotionTween<double>(
+            (a) => sprite.opacity = a, 0, 0, sprite.delayTime),
         new MotionGroup([
-          new MotionTween<Color>(
-                  (a) => sprite.colorOverlay = a,
-              Colors.white,
-              Colors.white10,
-              sprite.processTime/5),
-          new MotionTween<double>((a) => sprite.opacity = a, 1, 0, sprite.processTime),
+          new MotionTween<Color>((a) => sprite.colorOverlay = a, Colors.white,
+              Colors.white10, sprite.processTime / 5),
+          new MotionTween<double>(
+              (a) => sprite.opacity = a, 1, 0, sprite.processTime),
           new MotionTween<double>((a) => sprite.scale = a, sprite.originScale,
               sprite.endScale, sprite.processTime),
-          new MotionTween<Offset>((a) => sprite.position = a,
-              Offset(size.width, sprite.originY), Offset(0, sprite.originY), sprite.processTime),
+          new MotionTween<Offset>(
+              (a) => sprite.position = a,
+              Offset(size.width, sprite.originY),
+              Offset(0, sprite.originY),
+              sprite.processTime),
         ]),
         // new MotionDelay(sprite.totalTime - sprite.processTime - sprite.delayTime),
       ])),
@@ -247,14 +391,14 @@ class SquareSprite extends Sprite {
   final double originScale;
   final double endScale;
 
-  SquareSprite({
-    @required this.originY,
-    @required this.totalTime,
-    @required this.delayTime,
-    @required this.processTime,
-    @required this.originScale,
-    @required this.endScale
-  }) : super.fromImage(_images['assets/diamond.png']) {
+  SquareSprite(
+      {@required this.originY,
+      @required this.totalTime,
+      @required this.delayTime,
+      @required this.processTime,
+      @required this.originScale,
+      @required this.endScale})
+      : super.fromImage(_images['assets/diamond.png']) {
     // this.position = Offset(6, 3);
     this.colorOverlay = Colors.white;
     this.opacity = 0;
