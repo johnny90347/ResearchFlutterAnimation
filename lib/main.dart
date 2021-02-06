@@ -50,7 +50,7 @@ class _FirstPageState extends State<FirstPage> {
 
     AssetBundle bundle = rootBundle;
     _loadAssets(bundle).then(
-          (value) {
+      (value) {
         setState(() {
           assetsLoaded = true;
           rootNode = new ANArea();
@@ -127,9 +127,7 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
         width: 150,
         height: 75,
         decoration: BoxDecoration(
-            color: currentBtnId == widget.buttonId
-                ? Colors.brown
-                : Colors.grey,
+            color: currentBtnId == widget.buttonId ? Colors.brown : Colors.grey,
             borderRadius: BorderRadius.circular(10.0)),
         child: Stack(
           children: [
@@ -145,9 +143,26 @@ class _AnimatedBGButtonState extends State<AnimatedBGButton> {
 
 // 動畫播放的區域
 class ANArea extends NodeWithSize {
-  List<LightSpot> lightSpotList = [];
-  List<FloatDiamond> floatDiamondList = [];
-  List<DiamondSprite> diamondSpriteList = [];
+
+  List<SquareSprite> squareList = [
+    SquareSprite(originY: 10, totalTime: 3, delayTime: 0, processTime: 1.5, originScale: 1,endScale: 1),
+    SquareSprite(originY:2, totalTime: 3, delayTime: .2, processTime: 1.2, originScale: 0.7,endScale: 0.5),
+    SquareSprite(originY:8, totalTime: 3, delayTime: .3, processTime: 1.2, originScale: 0.5,endScale: 0.5),
+    SquareSprite(originY:6, totalTime: 3, delayTime: .4, processTime: 1.5, originScale: 1,endScale: 1),
+    SquareSprite(originY:1, totalTime: 3, delayTime: .5, processTime: 1, originScale: .7,endScale: .3),
+    SquareSprite(originY:8, totalTime: 3, delayTime: .5, processTime: 1, originScale: .3,endScale: .3),
+    SquareSprite(originY:7, totalTime: 3, delayTime: .7, processTime: 1.2, originScale: .7,endScale: .3),
+    SquareSprite(originY:6, totalTime: 3, delayTime: .8, processTime: .8, originScale: .4,endScale: .2),
+    SquareSprite(originY:2, totalTime: 3, delayTime: .9, processTime: 1, originScale: .6,endScale: .4),
+    SquareSprite(originY:5, totalTime: 3, delayTime: .9, processTime:1.5, originScale: .5,endScale: .2),
+    SquareSprite(originY:4, totalTime: 3, delayTime: .9, processTime:.8, originScale: .4,endScale: .2),
+    SquareSprite(originY:10, totalTime: 3, delayTime: 1, processTime:.8, originScale: .6,endScale: .6),
+    SquareSprite(originY:7, totalTime: 3, delayTime: 1, processTime:1.5, originScale: .7,endScale: .5),
+    SquareSprite(originY:4, totalTime: 3, delayTime: 1.1, processTime:1.6, originScale: .5,endScale: .3),
+    SquareSprite(originY:6, totalTime: 3, delayTime: 1.2, processTime:1.8, originScale: .6,endScale: .3),
+  ];
+
+
 
   ANArea() : super(new Size(24.0, 12.0)) {
     // _generateFlashDiamond();
@@ -157,308 +172,97 @@ class ANArea extends NodeWithSize {
     // _runDiamondSpriteAnimate();
     // _runLightSpotAnimate();
     // _runFloatDiamondAnimate();
-    final sprite = new SquareSprite(order: 1);
-    this.addChild(sprite);
+    // final sprite = new SquareSprite(order: 1);
+    // this.addChild(sprite);
+    //
+    // motions.run(
+    //   new MotionRepeatForever(new MotionSequence(<Motion>[
+    //     new MotionDelay(0),
+    //     new MotionGroup([
+    //       new MotionTween<double>((a) => sprite.opacity = a, 1, 0, 1.2),
+    //       new MotionTween<Offset>((a) => sprite.position = a,
+    //           Offset(size.width, 5), Offset(0, 5), 1.2),
+    //     ]),
+    //     new MotionDelay(0),
+    //   ])),
+    // );
+    //
+    // final sprite2 = new SquareSprite(order: 1);
+    // sprite2.scale = 1;
+    // this.addChild(sprite2);
+    // motions.run(
+    //   new MotionRepeatForever(new MotionSequence(<Motion>[
+    //     new MotionDelay(.4),
+    //     new MotionGroup([
+    //       new MotionTween<double>((a) => sprite2.opacity = a, 1, 0, 0.8),
+    //       new MotionTween<double>((a) => sprite2.scale = a, 1, .5, 0.8),
+    //       new MotionTween<Offset>((a) => sprite2.position = a,
+    //           Offset(size.width, 8), Offset(0, 8), 0.8),
+    //     ]),
+    //     new MotionDelay(0),
+    //   ])),
+    // );
 
+
+    this.squareList.forEach((sprite) {
+      this.addChild(sprite);
+     runAnimation(sprite: sprite);
+    });
+  }
+
+  void runAnimation({@required SquareSprite sprite}){
     motions.run(
       new MotionRepeatForever(new MotionSequence(<Motion>[
-        new MotionDelay(0),
+        new MotionTween<double>((a) => sprite.opacity = a, 0, 0, sprite.delayTime),
         new MotionGroup([
-          new MotionTween<double>((a) => sprite.opacity = a, 1,0, 1.5),
-          new MotionTween<Offset>(
-                  (a) => sprite.position = a,
-              Offset(size.width, 5),
-              Offset(0, 5),
-              1.5),
+          new MotionTween<Color>(
+                  (a) => sprite.colorOverlay = a,
+              sprite.colorOverlay,
+              Colors.white10,
+              sprite.processTime/5),
+          new MotionTween<double>((a) => sprite.opacity = a, 1, 0, sprite.processTime),
+          new MotionTween<double>((a) => sprite.scale = a, sprite.originScale,
+              sprite.endScale, sprite.processTime),
+          new MotionTween<Offset>((a) => sprite.position = a,
+              Offset(size.width, sprite.originY), Offset(0, sprite.originY), sprite.processTime),
         ]),
-        new MotionDelay(0),
-      ])),
-    );
-
-
-    final sprite2 = new SquareSprite(order: 1);
-    sprite2.scale = 1;
-    this.addChild(sprite2);
-    motions.run(
-      new MotionRepeatForever(new MotionSequence(<Motion>[
-        new MotionDelay(.5),
-        new MotionGroup([
-          new MotionTween<double>((a) => sprite2.opacity = a, 1,0, 1),
-          new MotionTween<double>(
-                  (a) => sprite2.scale = a,
-            1,
-              .5,
-              1),
-          new MotionTween<Offset>(
-                  (a) => sprite2.position = a,
-              Offset(size.width, 8),
-              Offset(0, 8),
-             1),
-        ]),
-        new MotionDelay(0),
+        new MotionDelay(sprite.totalTime - sprite.processTime - sprite.delayTime),
       ])),
     );
   }
 
-  void _generateLightSpot() {
-    for (int i = 0; i < 3; i++) {
-      final sprite = new LightSpot(order: i);
-      this.addChild(sprite);
-      lightSpotList.add(sprite);
-    }
-  }
+  void generateSpriteAndRunAnimation() {
 
-  // 往上飄的diamon
-  void _generateFloatDiamond() {
-    for (int i = 0; i < 4; i++) {
-      final sprite = new FloatDiamond(order: i);
-      this.addChild(sprite);
-      floatDiamondList.add(sprite);
-    }
-  }
-
-  // 產生動畫菱形
-  void _generateFlashDiamond() {
-    int order = 0;
-    // 劃菱形
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 6; j++) {
-        final sprite = new DiamondSprite(order: order);
-        final double xOffset = (1 + (j * 2)).toDouble(); //1,3,5,7,..
-        final double yOffset = (1 + (i * 2)).toDouble();
-        sprite.position = Offset(xOffset, yOffset);
-        this.addChild(sprite);
-        diamondSpriteList.add(sprite);
-        order++;
-      }
-    }
   }
 
   set active(bool active) {
     motions.stopAll();
-    _runDiamondSpriteAnimate();
-    _runLightSpotAnimate();
-    _runFloatDiamondAnimate();
-  }
-
-  void _runLightSpotAnimate() {
-    for (LightSpot lightSpot in lightSpotList) {
-      motions.run(
-        new MotionRepeatForever(new MotionSequence(<Motion>[
-          new MotionTween<double>(
-                  (a) => lightSpot.opacity = a, 0, 0, lightSpot.delayTime),
-          new MotionTween<double>((a) => lightSpot.opacity = a, 0, 1, 1),
-          new MotionTween<double>((a) => lightSpot.opacity = a, 1, 0, 2),
-        ])),
-      );
-    }
-  }
-
-  void _runDiamondSpriteAnimate() {
-    // 要做動畫的格子
-    const activeIndex = [2, 11, 12, 15];
-
-    for (int index in activeIndex) {
-      motions.run(
-        new MotionRepeatForever(new MotionSequence(<Motion>[
-          // 當作延遲時間
-          new MotionTween<double>((a) => diamondSpriteList[index].opacity = a,
-              1, 1, diamondSpriteList[index].delayTime),
-          // 這樣可以漸變顏色
-          new MotionTween<Color>(
-                  (a) => diamondSpriteList[index].colorOverlay = a,
-              Colors.white12,
-              Colors.white70,
-              1.0),
-          new MotionTween<Color>(
-                  (a) => diamondSpriteList[index].colorOverlay = a,
-              Colors.white70,
-              Colors.white12,
-              1.0),
-        ])),
-      );
-    }
-  }
-
-  void _runFloatDiamondAnimate() {
-    for (FloatDiamond floatDiamond in floatDiamondList) {
-      motions.run(
-        new MotionRepeatForever(new MotionGroup([
-          new MotionTween<double>((a) => floatDiamond.opacity = a, 1, 0.3, 5),
-          new MotionTween<Offset>(
-                  (a) => floatDiamond.position = a,
-              Offset(floatDiamond.xOffset, floatDiamond.yOffset),
-              Offset(floatDiamond.xOffset, 0.0),
-              5),
-        ])),
-      );
-    }
+    this.squareList.forEach((sprite) {
+      runAnimation(sprite: sprite);
+    });
   }
 }
 
 class SquareSprite extends Sprite {
-  final int order; // 編號
-  SquareSprite({@required this.order})
-      : super.fromImage(_images['assets/diamond.png']) {
-    this.position = Offset(6,3);
-    this.size = Size(3,3);
+  final double originY;
+  final double totalTime;
+  final double delayTime;
+  final double processTime;
+  final double originScale;
+  final double endScale;
+
+  SquareSprite({
+    @required this.originY,
+    @required this.totalTime,
+    @required this.delayTime,
+    @required this.processTime,
+    @required this.originScale,
+    @required this.endScale
+  }) : super.fromImage(_images['assets/diamond.png']) {
+    // this.position = Offset(6, 3);
+    this.colorOverlay = Colors.white70;
+    this.opacity = 0;
+    this.size = Size(3, 3);
     this.rotation = 45.0;
   }
-}
-
-// 用圖片的Sprite 菱形
-class DiamondSprite extends Sprite {
-  //order
-  //  0,  1,  2,  3,  4,  5
-  //  6,  7,  8,  9,  10, 11
-  //  12, 13, 14, 15, 16, 17
-
-  final int order; // 編號
-  double delayTime;
-  DiamondSprite({@required this.order})
-      : super.fromImage(_images['assets/diamond.png']) {
-    // Size(2,2) 因為我整個畫布是 寬 12,高 6, 這樣可以塞入共18個菱形
-    this.size = Size(2, 2);
-
-    switch (order) {
-      case 2:
-        delayTime = 0;
-        break;
-      case 11:
-        delayTime = 0;
-        break;
-      case 12:
-        delayTime = 2;
-        break;
-      case 15:
-        delayTime = 3;
-        break;
-    }
-  }
-
-//  //播放動畫
-//  void _playAnimation({@required int delayTime}) {
-//    Timer(Duration(seconds: delayTime), () {
-//      _flashAnimation();
-//    });
-//  }
-//
-//  // 閃爍動畫
-//  void _flashAnimation() {
-//    // 閃爍動畫
-//    motions.run(
-//      new MotionRepeatForever(new MotionSequence(<Motion>[
-//        // 這樣可以漸變顏色
-//        new MotionTween<Color>(
-//            (a) => this.colorOverlay = a, Colors.white12, Colors.white70, 2.0),
-//        new MotionTween<Color>(
-//            (a) => this.colorOverlay = a, Colors.white70, Colors.white12, 2.0),
-//      ])),
-//    );
-//  }
-}
-
-// 往上飄動的菱形
-class FloatDiamond extends Sprite {
-  final int order; // 編號
-
-  double xOffset;
-  double yOffset;
-  double scaleValue;
-  Color colorCover;
-  FloatDiamond({@required this.order})
-      : super.fromImage(_images['assets/diamond.png']) {
-    switch (order) {
-      case 0:
-        xOffset = 1.5;
-        yOffset = 5;
-        scaleValue = 1.3;
-        colorCover = Colors.white54;
-        break;
-      case 1:
-        xOffset = 4;
-        yOffset = 4;
-        scaleValue = 1.0;
-        colorCover = Colors.white54;
-        break;
-      case 2:
-        xOffset = 8.5;
-        yOffset = 4.5;
-        scaleValue = 1.5;
-        colorCover = Colors.white24;
-        break;
-      case 3:
-        xOffset = 11;
-        yOffset = 5.5;
-        scaleValue = 1.1;
-        colorCover = Colors.white54;
-        break;
-    }
-
-    this.size = Size(1, 1);
-    this.scale = scaleValue;
-    this.position = Offset(xOffset, yOffset);
-    this.colorOverlay = Colors.white54;
-
-//    animation();
-  }
-
-//  void animation() {
-//    motions.run(
-//      new MotionRepeatForever(new MotionGroup([
-//        new MotionTween<double>((a) => opacity = a, 1, 0.3, 5),
-//        new MotionTween<Offset>((a) => position = a, Offset(xOffset, yOffset),
-//            Offset(xOffset, 0.0), 5),
-//      ])),
-//    );
-//  }
-}
-
-class LightSpot extends Sprite {
-  final int order; // 編號
-  Offset spritePosition;
-//  int delayTime;
-  double delayTime;
-  LightSpot({@required this.order})
-      : super.fromImage(_images['assets/light_spot.png']) {
-    switch (order) {
-      case 0:
-        spritePosition = Offset(3, 2);
-        delayTime = 0;
-        break;
-      case 1:
-        spritePosition = Offset(3, 4);
-        delayTime = 2;
-        break;
-      case 2:
-        spritePosition = Offset(9, 4);
-        delayTime = 1;
-        break;
-    }
-
-    this.size = Size(2, 2);
-    this.position = spritePosition;
-    this.rotation = 63;
-    opacity = 0;
-
-//    _playAnimation(delayTime: delayTime);
-  }
-
-//  //播放動畫
-//  void _playAnimation({@required int delayTime}) {
-//    Timer(Duration(seconds: delayTime), () {
-//      _flashAnimation();
-//    });
-//  }
-//
-//  // 閃爍動畫
-//  void _flashAnimation() {
-//    // 閃爍動畫
-//    motions.run(
-//      new MotionRepeatForever(new MotionSequence(<Motion>[
-//        new MotionTween<double>((a) => opacity = a, 0, 1, 1),
-//        new MotionTween<double>((a) => opacity = a, 1, 0, 2),
-//      ])),
-//    );
-//  }
 }
