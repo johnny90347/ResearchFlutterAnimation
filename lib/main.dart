@@ -24,6 +24,7 @@ class FirstPage extends StatelessWidget {
   }
 }
 
+int currentIndex = 0;
 
 class TopInfo extends StatefulWidget {
   @override
@@ -31,84 +32,96 @@ class TopInfo extends StatefulWidget {
 }
 
 class _TopInfoState extends State<TopInfo> {
+
+  final imageNames = [
+    'e_sport',
+    'ele',
+    'fish'
+  ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 400,
-          height: 100,
-          color: Colors.blue,
-          child: CustomPaint(
-            painter:PathPainter() ,
-          )
-          ,
-        ),
-      ],
+    print('上面重build');
+    return Container(
+      height: 550,
+      width: 150,
+      color: Colors.blue,
+      child: ListView.builder(
+          itemCount: 3,
+          itemBuilder:(BuildContext context ,int index ){
+            return Btn(
+                index: index,
+                onTap: (){
+
+              print(index);
+            });
+          }
+      ),
     );
   }
 }
 
 
-class PathPainter extends CustomPainter {
+class Btn extends StatefulWidget {
+  final Function onTap;
+  final int index;
+  Btn({@required  this.onTap,@required this.index});
+
   @override
-  void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
-    // 這裡的size 就是父層的寬高(400,100)
-    Paint paint = Paint()
-    ..color = Colors.red
-        .. style = PaintingStyle.fill
-        .. strokeWidth = 5
-      ..shader = ui.Gradient.linear(
-        Offset(175, size.height * 0.4),
-        Offset(100, 100),
-        [
-          Colors.cyan,
-          Colors.deepOrange,
-        ],
-      );
+  _BtnState createState() => _BtnState();
+}
 
-    Path path = Path();
-    path.moveTo(0, size.height);
-    path.lineTo(100, size.height );
-    // 定位點要是位移的一半
-    path.quadraticBezierTo(125,  size.height , 150,  size.height * 0.6);
-    path.quadraticBezierTo(175,  size.height * 0.4, 200,  size.height * 0.4);
-    path.lineTo(size.width, size.height * 0.4);
-    path.lineTo(size.width,0);
-    path.lineTo(0,0);
-    path.close();
-    canvas.drawPath(path, paint);
+class _BtnState extends State<Btn> with SingleTickerProviderStateMixin  {
+
+  AnimationController _scaleAnimation;
 
 
+  @override
+  void initState() {
+    super.initState();
 
-    // 這裡的size 就是父層的寬高(400,100)
-    Paint paint2 = Paint()
-      ..color = Colors.red
-      .. style = PaintingStyle.stroke
-      .. strokeWidth = 1
-      ..shader = ui.Gradient.linear(
-        Offset(0, size.height * 0.5),
-        Offset(size.width, size.height * 0.5),
-        [
-          Colors.orange,
-          Colors.black,
-        ],
-      );
-
-    Path path2 = Path();
-    path2.moveTo(0, size.height);
-    path2.lineTo(100, size.height );
-    // 定位點要是位移的一半
-    path2.quadraticBezierTo(125,  size.height , 150,  size.height * 0.6);
-    path2.quadraticBezierTo(175,  size.height * 0.4, 200,  size.height * 0.4);
-    path2.lineTo(size.width, size.height * 0.4);
-    // path.lineTo(size.width,0);
-    // path.lineTo(0,0);
-    // path.close();
-    canvas.drawPath(path2, paint2);
+    _scaleAnimation = AnimationController(
+      duration: Duration(milliseconds: 200),
+      vsync: this,
+      value: 1.0,
+      lowerBound: 1.0,
+      upperBound: 1.5,
+    ); // 不斷重複
   }
+
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: (){
+       widget.onTap();
+        if(currentIndex == widget.index) return;
+        _scaleAnimation.reset();
+        _scaleAnimation.forward().then((value) => {
+          _scaleAnimation.reverse()
+        });
+        // 這樣重複點到同一個 就不會一直觸發動畫
+       currentIndex = widget.index;
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black
+          )
+        ),
+        height: 100,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Image(
+            image: AssetImage("assets/fish.png"),
+          ),
+        ),
+      ),
+    );
+  }
 }
